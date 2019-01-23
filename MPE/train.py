@@ -27,7 +27,7 @@ def parse_args():
     parser.add_argument("--num-units", type=int, default=300, help="number of units in the mlp")
     # Checkpointing
     parser.add_argument("--exp-name", type=str, default=None, help="name of the experiment")
-    parser.add_argument("--save-dir", type=str, default="/home/meha/maddpgCheckPoints", help="directory in which training state and model should be saved")
+    parser.add_argument("--save-dir", type=str, default="/tmp/MADRaS/maddpgCheckPoints", help="directory in which training state and model should be saved")
     parser.add_argument("--save-rate", type=int, default=300, help="save model once every time this many episodes are completed")
     parser.add_argument("--load-dir", type=str, default="", help="directory in which training state and model are loaded")
     # Evaluation
@@ -70,13 +70,15 @@ def train(arglist):
     with U.single_threaded_session():
         # create world
         world = World()
+        print("World Created")
 
         # Create environment
         env = MultiAgentTorcsEnv(world, 0, world.reset_world, world.reward, world.observation, done_callback = world.done) 
-
+        print("Env Created")
         # Create agent trainers
         obs_shape_n = [env.observation_space[i].shape for i in range(env.n)]
         num_adversaries = env.adv#min(env.n, arglist.num_adversaries)
+        print("Adversaries created")
         trainers = get_trainers(env, num_adversaries, obs_shape_n, arglist)
 
         print('Using good policy {} and adv policy {}'.format(arglist.good_policy, arglist.adv_policy))
@@ -100,9 +102,11 @@ def train(arglist):
 
         #todo : call reset function here 
         os.system("pkill torcs")
-        os.system("cd ~/vtorcs3 && ./torcs &") #use the location of torcs installation on your system
+        os.system("torcs -nolaptime &") #use the location of torcs installation on your system
+        print("TORCS STARTED")
         time.sleep(0.5)
         os.system('sh autostart.sh')
+        print("USED AUTOSTART")
         time.sleep(1)
 
         obs_n = []

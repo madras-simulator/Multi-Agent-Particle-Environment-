@@ -7,9 +7,6 @@ import copy
 import collections as col
 import os
 import time
-import random
-
-import theano
 
 class TorcsEnv:
     terminal_judge_start = 100      # If after 100 timestep still no progress, terminated
@@ -31,7 +28,8 @@ class TorcsEnv:
 
         self.currState = None 
 
-        os.system("cd ~/vtorcs3 && ./torcs &")
+        #os.system("cd ~/vtorcs3 && ./torcs &")
+        os.system("torcs -nolaptime &")
         time.sleep(1.0)
         os.system(u'sh autostart.sh')
 
@@ -39,8 +37,8 @@ class TorcsEnv:
         if throttle is False:                           # Throttle is generally True
             self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))
         else:
-            high = np.array([1., 1., 1.], dtype=theano.config.floatX)
-            low = np.array([-1., 0., 0.], dtype=theano.config.floatX)
+            high = np.array([1., 1., 1.], dtype=np.float32)
+            low = np.array([-1., 0., 0.], dtype=np.float32)
             self.action_space = spaces.Box(low=low, high=high)              # steer, accel, brake (according to agent_to_torcs() (check the function definition))
 
         if vision is False:                             # Vision is generally False
@@ -48,8 +46,8 @@ class TorcsEnv:
             low = -high
             self.observation_space = spaces.Box(low, high)
         else:
-            high = np.array([1., np.inf, np.inf, np.inf, 1., np.inf, 1., np.inf, 255], dtype=theano.config.floatX)
-            low = np.array([0., -np.inf, -np.inf, -np.inf, 0., -np.inf, 0., -np.inf, 0], dtype=theano.config.floatX)
+            high = np.array([1., np.inf, np.inf, np.inf, 1., np.inf, 1., np.inf, 255], dtype=np.float32)
+            low = np.array([0., -np.inf, -np.inf, -np.inf, 0., -np.inf, 0., -np.inf, 0], dtype=np.float32)
             self.observation_space = spaces.Box(low=low, high=high)			
 
     def terminate(self):
@@ -217,6 +215,9 @@ class TorcsEnv:
     def reset_torcs(self):
         #print("relaunch torcs")		
         os.system('pkill torcs &')
+        os.system("torcs -nolaptime &")
+        time.sleep(1.0)
+        os.system(u'sh autostart.sh')
 
     def agent_to_torcs(self, u):
         torcs_action = {'steer': u[0]}
