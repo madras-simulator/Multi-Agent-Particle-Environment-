@@ -102,7 +102,7 @@ def train(arglist):
 
         #todo : call reset function here 
         os.system("pkill torcs")
-        os.system("torcs -t 10000000 -nolaptime &") #use the location of torcs installation on your system
+        os.system("torcs -nolaptime &") #use the location of torcs installation on your system
         print("TORCS STARTED")
         time.sleep(0.5)
         os.system('sh autostart.sh')

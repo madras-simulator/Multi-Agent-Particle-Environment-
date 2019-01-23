@@ -29,7 +29,7 @@ class TorcsEnv:
         self.currState = None 
 
         #os.system("cd ~/vtorcs3 && ./torcs &")
-        os.system("torcs -t 10000000 -nolaptime &")
+        os.system("torcs -nolaptime &")
         time.sleep(1.0)
         os.system(u'sh autostart.sh')
 

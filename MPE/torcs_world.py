@@ -58,10 +58,10 @@ class World(object):
               self.agent_list[i].client.R.d['meta'] = True
         
       def get_initial_observation(self, agent,step_count=0):
-          print("ENTERED FUNCTION#########################{}".format(agent.port))
+          #print("ENTERED FUNCTION#########################{}".format(agent.port))
           out = agent.client.get_servers_input(step_count)
           obs = agent.client.S.d
-          print("STATUS {} {}".format(out, agent.port))
+          #print("STATUS {} {}".format(out, agent.port))
           ob = self.env.make_observation(obs)
           agent.s_t = np.hstack((ob.angle, ob.track, ob.trackPos, ob.speedX, ob.speedY,  ob.speedZ, ob.wheelSpinVel/100.0, ob.rpm, ob.opponents))
           print(agent.s_t.shape)

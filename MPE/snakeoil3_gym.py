@@ -245,7 +245,6 @@ class Client(object):
             try:
                 # Receive server data
                 sockdata, addr = self.so.recvfrom(data_size)
-                print("GOT SOCKDATA")
                 sockdata = sockdata.decode('utf-8')
             except socket.error as emsg:
                 print(u'.')
@@ -253,7 +252,6 @@ class Client(object):
 
                 print(u"Server count down : " + str(n_fail))
                 if n_fail < 0:
-                    print("SHUTDOWN")
                     self.shutdown()
                     return -1
                     n_fail = n_fail_org
