@@ -168,7 +168,7 @@ class Client(object):
             sockdata= str()
             try:
                 sockdata,addr= self.so.recvfrom(data_size)
-                sockdata = sockdata.decode(u'utf-8')
+                sockdata = sockdata.decode('utf-8')
             except socket.error as emsg:
                 print(u"Waiting for server on %d............" % self.port)
                 print(u"Count Down : " + str(n_fail))
@@ -244,30 +244,32 @@ class Client(object):
         while True:
             try:
                 # Receive server data
-                sockdata,addr= self.so.recvfrom(data_size)
-                sockdata = sockdata.decode(u'utf-8')
+                sockdata, addr = self.so.recvfrom(data_size)
+                print("GOT SOCKDATA")
+                sockdata = sockdata.decode('utf-8')
             except socket.error as emsg:
                 print(u'.')
                 print("Waiting for server data on %d.............." % self.port)
 
                 print(u"Server count down : " + str(n_fail))
                 if n_fail < 0:
+                    print("SHUTDOWN")
                     self.shutdown()
                     return -1
                     n_fail = n_fail_org
 
                 n_fail -= 1
 
-            if u'***identified***' in sockdata:
+            if '***identified***' in sockdata:
                 print(u"Client connected on %d.............." % self.port)
                 continue
-            elif u'***shutdown***' in sockdata:
+            elif '***shutdown***' in sockdata:
                 print ((u"Server has stopped the race on %d. "+
                         u"You were in %d place.") %
                         (self.port,self.S.d[u'racePos']))
                 self.shutdown()
                 return -1
-            elif u'***restart***' in sockdata:
+            elif '***restart***' in sockdata:
                 # What do I do here?
                 print( u"Server has restarted the race on %d." % self.port)
                 # I haven't actually caught the server doing this.
@@ -581,7 +583,7 @@ def drive_example(c):
 
 # ================ MAIN ================
 if __name__ == u"__main__":
-    C= Client(p=3101)
+    C= Client(p=3001)
     for step in range(C.maxSteps,0,-1):
         C.get_servers_input()
         drive_example(C)

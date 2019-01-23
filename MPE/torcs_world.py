@@ -9,7 +9,7 @@ from gym_torcs import TorcsEnv
 class Agent(object):
       def __init__(self,idx=0):
           self.idx = idx
-          self.port = 3101+self.idx
+          self.port = 3001+self.idx
           self.action_dim = 3
           self.state_dim = 65
           self.obs = []
@@ -40,6 +40,8 @@ class World(object):
               agent = Agent(idx = i) 
               #agent.s_t = self.get_initial_observation(agent,0) #can remove step from here, can even remove the function
               self.agent_list.append(agent)
+
+          print("Agents created")
   
           ''' for i in range(self.n2):			#uncomment this for competitive agents
               agent = Agent(idx = i + self.n) 
@@ -56,10 +58,13 @@ class World(object):
               self.agent_list[i].client.R.d['meta'] = True
         
       def get_initial_observation(self, agent,step_count=0):
-          agent.client.get_servers_input(step_count)
+          print("ENTERED FUNCTION#########################{}".format(agent.port))
+          out = agent.client.get_servers_input(step_count)
           obs = agent.client.S.d
+          print("STATUS {} {}".format(out, agent.port))
           ob = self.env.make_observation(obs)
           agent.s_t = np.hstack((ob.angle, ob.track, ob.trackPos, ob.speedX, ob.speedY,  ob.speedZ, ob.wheelSpinVel/100.0, ob.rpm, ob.opponents))
+          print(agent.s_t.shape)
           return agent.s_t
 
       def update_agent_state(self, agent):  #this should be a function in agent class
