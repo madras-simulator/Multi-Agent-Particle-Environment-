@@ -215,6 +215,9 @@ class TorcsEnv:
     def reset_torcs(self):
         #print("relaunch torcs")		
         os.system('pkill torcs &')
+        os.system("torcs -nolaptime &")
+        time.sleep(1.0)
+        os.system(u'sh autostart.sh')
 
     def agent_to_torcs(self, u):
         torcs_action = {'steer': u[0]}
